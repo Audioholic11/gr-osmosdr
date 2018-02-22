@@ -263,7 +263,7 @@ int pluto_source_c::work( int noutput_items,
     const int nout = std::min(noutput_items, _samp_avail);
     const short *buf = _buf[_buf_head] + _buf_offset * 2;
 
-	volk_16i_s32f_convert_32f((float*)out, buf, scaling, 2 * noutput_items);
+	volk_16i_s32f_convert_32f((float*)out, buf, scaling, 2 * nout);
 	out += nout;
 
     noutput_items -= nout;
@@ -330,7 +330,7 @@ double pluto_source_c::set_sample_rate(double rate)
 {
   if (_dev) {
     plutosdr_set_sample_rate( _dev, (uint32_t)rate );
-  }
+	}
 
   return get_sample_rate();
 }
@@ -378,7 +378,7 @@ std::vector<std::string> pluto_source_c::get_gain_names( size_t chan )
 
 osmosdr::gain_range_t pluto_source_c::get_gain_range( size_t chan )
 {
-	return osmosdr::gain_range_t(-10, 60, 1);
+	return osmosdr::gain_range_t(-10, 77, 1);
 }
 
 osmosdr::gain_range_t pluto_source_c::get_gain_range( const std::string & name, size_t chan )
@@ -450,5 +450,12 @@ double pluto_source_c::set_freq_corr(double ppm, size_t chan)
 
 double pluto_source_c::get_freq_corr(size_t chan)
 {
+	return 0;
+}
+
+double pluto_source_c::set_bandwidth(double bandwidth, size_t chan) {
+	if (_dev) {
+		plutosdr_set_rfbw(_dev, (uint32_t)bandwidth);
+	}
 	return 0;
 }
